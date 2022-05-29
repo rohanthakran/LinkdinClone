@@ -1,0 +1,22 @@
+.container{
+    max-width: 1128px;
+    margin : 0 auto;
+    padding : 10px 0 5px;
+}
+.Thelayout{
+    display: grid;
+    grid-template-areas: "leftside rightside";
+    grid-template-columns:  minmax(0,12fr) minmax(300px, 5fr);
+    column-gap: 25px;
+    row-gap: 25px;
+    margin: 25px 0;
+}
+.UserInfo{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.rightyourself{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

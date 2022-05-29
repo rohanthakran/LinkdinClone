@@ -1,0 +1,28 @@
+.container{
+    max-width: 1128px;
+    margin : 0 auto;
+    padding : 10px 0 5px;
+}
+.layout{
+    display: grid;
+    grid-template-areas: "leftside main rightside";
+    grid-template-columns: minmax(0,5fr) minmax(0,12fr) minmax(300px, 7fr);
+    column-gap: 25px;
+    row-gap: 25px;
+    margin: 25px 0;
+}
+
+@media (max-width:768px){
+    .Nav_Menu{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .layout{
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+    }
+}

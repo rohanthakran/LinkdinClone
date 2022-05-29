@@ -1,0 +1,26 @@
+.linkdin-logo{
+    width: 100%;
+}
+
+.Signin img{
+    width: 110px;
+    margin: 32px 0px 0px 56px;
+
+    /* height: 60px; */
+}
+.main_content{
+    display: flex;
+    flex-direction: column;
+   
+}
+.main_content form{
+    display: flex ;
+    flex-direction: column;
+}
+.form{
+    background-color: red;
+    width: auto;
+    height: auto;
+    margin: auto;
+
+}
