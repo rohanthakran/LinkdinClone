@@ -57,3 +57,66 @@ exports.login = async(req,res) =>{
         })
     }
 }
+exports.logout = async (req, res) => {
+    try {
+      res
+        .status(200)
+        .cookie("token", null, { expires: new Date(Date.now()), httpOnly: true })
+        .json({
+          success: true,
+          message: "Logged out",
+        });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+exports.followUser = async (req,res) =>{
+    try {
+        
+        const userToFollow = await User.findById(req.params.id);
+        const loggedinUser =  await User.findById(req.user._id);
+        console.log("The user",userToFollow)
+        console.log("loginnuser", loggedinUser)
+        if(!userToFollow){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+       if (loggedinUser.following.includes(userToFollow._id)) {
+        const indexLogin=  loggedinUser.following.indexOf(userToFollow._id);
+        const indexFollow= userToFollow.followers.indexOf(loggedinUser._id);
+
+        loggedinUser.following.splice(indexLogin,1)
+        userToFollow.followers.splice(indexFollow,1);
+        await loggedinUser.save();
+        await userToFollow.save();
+
+        res.status(200).json({
+            success:true,
+            message:"User unfollowed"
+        })
+       } else {
+        loggedinUser.following.push(userToFollow._id);
+        userToFollow.followers.push(loggedinUser._id);
+
+        await loggedinUser.save();
+        await userToFollow.save();
+
+        res.status(200).json({
+            success:true,
+            message:"User followed"
+        })
+       }
+
+
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message: error.message
+        })
+    }
+}
