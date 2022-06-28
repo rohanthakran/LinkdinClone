@@ -1,4 +1,5 @@
 const User = require("../models/User")
+const Post = require("../models/Post")
 
 exports.register = async(req,res) =>{
     try {   
@@ -37,6 +38,7 @@ exports.login = async(req,res) =>{
                 message :"USer does not exit"
             })
         }
+        
         const isMatch = await user.matchPassword(password)
         if(!isMatch) {
             return res.status(400).json({
@@ -45,6 +47,12 @@ exports.login = async(req,res) =>{
             })
         }
         const token = await user.generateToken(user._id);
+        // if(token){
+        //     return res.status(404).json({
+        //         success:true,
+        //         message:"user already login"
+        //     })
+        // }
         res.status(200).cookie("token", token,{expires:new Date(Date.now() +90*24*60*60*1000),httpOnly:true}).json({
             success:true,
             user
@@ -123,8 +131,15 @@ exports.followUser = async (req,res) =>{
 
 exports.updatePassword = async(req,res) =>{
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id).select("+password");
         const {oldPassword,newPassword} = req.body;
+
+        if(!oldPassword || !newPassword){
+            return res.status(400).json({
+                success: false,
+                message:"Please provide old and new password"
+            })
+        }
         const isMatch =await user.matchPassword(oldPassword)
 
         if(!isMatch) {
@@ -166,6 +181,102 @@ exports.updaProfile = async(req,res) =>{
 
         })
     } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+exports.deletMyProfile = async(req,res) =>{
+    try {
+        const user = await User.findById(req.user._id);
+        const posts = user.posts
+        const followers = user.followers
+       
+
+        for(let i =0;i<posts.length;i++){
+            const post = await Post.findById(posts[i])
+            await post.remove();
+        }
+
+        for(let i =0;i<followers.length;i++){
+            const follower = await User.findById(followers[i])
+      
+            const index = follower.following.indexOf(req.user._id);
+            follower.following.splice(index,1);
+            await follower.save()
+        }
+
+
+        for(let i =0;i<following.length;i++){
+            const following = await User.findById(followings[i])
+          
+            const index = following.followers.indexOf(req.user._id);
+            following.following.splice(index,1);
+            await following.save()
+        }
+        await user.remove();
+
+        res
+        .status(200)
+        .cookie("token", null, { expires: new Date(Date.now()), httpOnly: true })
+       
+       
+        res.status(200).json({
+            success:true,
+            message:"Profile Deleted"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+
+exports.myProfile = async(req,res) =>{
+    try {
+        const user = await User.findById(req.user._id).populate("posts");
+        res.status(200).json({
+            success:true,
+            user
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message:error.message
+        })
+    }
+}
+exports.getUserProfile = async(req,res) =>{
+    try {
+        const user = await User.findById(req.params.id).populate("posts");
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+        res.status(200).json({
+            success:true,
+            user
+        })
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+exports.getAllusers = async (req,res) =>{
+    try{
+        const users = await User.find({});
+        res.status(200).json({
+            success:true,
+            users
+        })
+    }
+    catch(error){
         res.status(500).json({
             success:false,
             message:error.message
