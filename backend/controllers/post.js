@@ -163,3 +163,100 @@ exports.updateCaption = async (req,res) =>{
         })
     }
 }
+exports.addcomment = async(req,res) =>{
+    try {
+        const post = await Post.findById(req.params.id);
+        if(!post){
+            return res.status(404).json({
+                success:false,
+                message:"Post not found"
+            })
+        }
+        let commentIndex = -1
+          
+        post.comments.forEach((item,index) =>{
+            if(item.user.toString() === req.user._id.toString()){
+                commentIndex = index;
+            }
+        })
+      if(commentIndex !== -1){
+        post.comments[commentIndex].comment = req.body.comment;
+        await post.save();
+        return res.status(200).json({
+            success:true,
+            message:"Comment updated"
+        })
+      }
+      else{
+        post.comments.push({
+            user:req.user._id,
+            comment: req.body.comment,
+        })
+        await post.save()
+
+        return res.status(200).json({
+            success:true,
+            message:"Commnet added"
+        })
+      }
+
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+exports.commentDelete = async (req,res) =>{
+    try {
+        const post = await Post.findById(req.params.id);
+        
+        if(!post){
+            return res.status(404).json({
+                success:false,
+                message:"Post not found"
+            })
+        }
+        if(post.owner.toString() === req.user._id.toString()){
+
+            if(req.body.commentId == undefined){
+                return res.status(400).json({
+                    success:false,
+                    message:"Comment id required"
+                })
+            }
+            post.comments.forEach((item,index) =>{
+                if(item._id.toString() === req.body.commentId.toString()){
+                    return post.comments.splice(index,1);
+
+                }
+            }) 
+            await post.save()
+
+            res.status(200).json({
+                success:true,
+                message:"Selected Comment deleted"
+            })
+        
+        }
+        else{
+            post.comments.forEach((item,index) =>{
+                if(item.user.toString() === req.user._id.toString()){
+                    return post.comments.splice(index,1);
+
+                }
+            }) 
+            await post.save()
+
+            res.status(200).json({
+                success:true,
+                message:"Your comment deleted"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
