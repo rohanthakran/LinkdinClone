@@ -4,10 +4,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser")
 const app = express();
+const cors = require('cors')
 
 app.use(bodyParser.json())
 app.use(express.json());
+app.use(cors())
 app.use(cookieParser())
+
 
 
 mongoose.connect(process.env.DATABASE)
@@ -21,6 +24,7 @@ const  post  = require('./routes/post');
 const user  =require("./routes/user")
 app.use("/api", post)
 app.use("/api",user)
+
 
 
 
