@@ -31,11 +31,11 @@ export const userReducer = createReducer(intitialStore,{
         state.loading = true
     },
     LoadUserSuccess:(state,action) =>{
-        state.loading = false
+        state.loading = false;
         state.user = action.payload
     },
     LoadUserFailure:(state,action) =>{
-        state.loading = false
+        state.loading = false;
         state.error = action.payload
     },
 

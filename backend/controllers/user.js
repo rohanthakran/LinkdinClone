@@ -49,23 +49,30 @@ exports.login = async(req,res) =>{
             })
         }
         const token = await user.generateToken(user._id);
-        // if(token){
-        //     return res.status(404).json({
-        //         success:true,
-        //         message:"user already login"
-        //     })
-        // }
-        res.status(200).cookie("token", token,{expires:new Date(Date.now() +90*24*60*60*1000),httpOnly:true}).json({
-            success:true,
-            user
-        })
+        console.log("The token generated",token)
+       
+
+    const options = {
+        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        httpOnly: true
+      };
+      res.cookie("token",token,options)
+      res.status(200).json({
+        success: true,
+        user,
+        
+      });
+        // res.status(200).cookie("token", token,{expires:new Date(Date.now() +90*24*60*60*1000),httpOnly:true}).json({
+        //     success:true,
+        //     user
+        // })
         
     } catch (error) {
-        // res.status(500).json({
-        //     success:false,
-        //     message:error.message
-        // })
-        console.log(error)
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+        
     }
 }
 exports.logout = async (req, res) => {

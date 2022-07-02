@@ -5,13 +5,19 @@ const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser")
 const app = express();
 const cors = require('cors')
-
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.json());
 app.use(cors())
-app.use(cookieParser())
+app.get('/', function (req, res) {
+    // Cookies that have not been signed
 
-
+    console.log('Cookies: ', req.cookies)
+  
+    // Cookies that have been signed
+    console.log('Signed Cookies: ', req.signedCookies)
+  })
+  
 
 mongoose.connect(process.env.DATABASE)
         .then(() =>{
