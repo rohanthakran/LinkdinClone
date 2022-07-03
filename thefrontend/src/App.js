@@ -3,19 +3,21 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import Header from './Components/Header/Header';
 import Login from './Components/Login/Login';
 import React, {useEffect} from "react"
-import {useDispatch } from "react-redux"
+import {useDispatch, useSelector } from "react-redux"
 import { loadUser } from './Actions/User';
+import Home from './Components/Home/Home';
 function App() {
   const dispatch = useDispatch()
   useEffect(() =>{
     dispatch(loadUser())
     console.log("The effect")
   },[])
+  const {isAuthenticated} = useSelector((state) => state.user)
   return (
     <Router>
-      <Header/>
+      {isAuthenticated && <Header/>}
       <Routes>
-        <Route path="/" element={<Login/>}/>
+        <Route path="/" element={isAuthenticated ? <Home/>: <Login/>}/>
       </Routes>
     </Router>
   );
