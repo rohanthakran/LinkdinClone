@@ -1,8 +1,9 @@
 import {configureStore} from "@reduxjs/toolkit"
-import { userReducer } from "./Reducers/User" 
+import { userReducer,postOfFollwoingReducer } from "./Reducers/User" 
 const store = configureStore({
     reducer:{
-        user:userReducer
+        user:userReducer,
+        postOfFollowing :postOfFollwoingReducer
     }
 })
 export default store

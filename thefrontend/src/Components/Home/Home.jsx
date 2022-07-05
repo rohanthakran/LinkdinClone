@@ -1,16 +1,39 @@
-import React from 'react'
+import React ,{useEffect} from 'react'
 import "./Home.css"
+import {useDispatch, useSelector } from "react-redux";
 import User from '../User/User'
 import Post from '../Post/Post'
+import { followingPost } from '../../Actions/User';
+import Loader from '../Loader/Loader';
+import { Typography } from '@mui/material';
 const Home = () => {
+    const dispatch = useDispatch()
+    const {loading,posts,error} = useSelector(state=>state.postOfFollowing)
+
+    useEffect(() =>{
+        dispatch(followingPost())
+    },[])
   return (
-    <div className='home'>
+     loading? <Loader/> :(
+        <div className='home'>
         <div className="homeleft">
+            
+           
+          {posts && posts.length > 0 ? posts.map((post) =>(
             <Post 
-                postImage={"https://www.kamalinstitute.com/images/placements-students/ROHAN-THAKRAN.jpg"}
-                ownerName={"Mr Rohan "}
-                caption="This is a sample"
+            key={post._id}
+                postImage={post.image.url}
+                ownerName={post.owner.name}
+                postId={post._id}
+                caption={post.caption}
+                likes ={post.likes}
+                comments={post.comments}
+                ownerImage={post.owner.avatar.url}
+                ownerId={post.owner._id}
+                
             />
+          )) : <Typography variant='h6'>No post yet</Typography> }
+             
         </div>
         <div className="homeright">
             <User
@@ -21,6 +44,7 @@ const Home = () => {
         </div>
 
     </div>
+     )
   )
 }
 

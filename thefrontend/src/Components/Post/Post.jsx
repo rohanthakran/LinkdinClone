@@ -27,7 +27,13 @@ const Post = ({
     }
   return (
     <div className='post'>
-        <div className="postHeader"></div>
+        <div className="postHeader">
+            {isAccount ?(
+              <Button>
+                <MoreVert/>
+              </Button>
+            ) : null}
+        </div>
         <img src={postImage} alt="Post"/>
         <div className='postDetails'>
             <Avatar src={ownerImage} alt="user"
@@ -65,9 +71,9 @@ const Post = ({
                 <ChatBubbleOutline/>
             </Button>
 
-            <Button>
+            {isDelete ? (<Button>
                 <DeleteOutline/>
-            </Button>
+            </Button>) : null}
           </div>
     </div>  
   )
