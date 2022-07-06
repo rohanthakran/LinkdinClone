@@ -1,6 +1,8 @@
 import { Avatar, Button, Typography } from '@mui/material'
 import React,{useState} from 'react'
 import {NavLink} from "react-router-dom"
+import {useDispatch, useSelector } from "react-redux";
+
 import {
     MoreVert,
     Favorite,
@@ -9,6 +11,7 @@ import {
     DeleteOutline
 } from "@material-ui/icons"
 import "./Post.css"
+import { likeDislikePost } from '../../Actions/Post';
 const Post = ({
     postId,
     caption,
@@ -21,10 +24,15 @@ const Post = ({
     isDelete = false,
     isAccount = false,
 }) => {
+  const dispatch = useDispatch()
+  const {users,loading:usersLoading} = useSelector(state=>state.allUsers)
+
     const [liked,setLiked] = useState(false)
     const handleLiked = () =>{
         setLiked(!liked)
+        dispatch(likeDislikePost(postId))
     }
+    console.log("Post id", postId)
   return (
     <div className='post'>
         <div className="postHeader">

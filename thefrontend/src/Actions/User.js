@@ -68,3 +68,23 @@ export const loginUser = (email, password) => async (dispatch) => {
       })
     }
   }
+
+  export const allUsers = () => async (dispatch)=>{
+    try {
+      dispatch({
+        type:"allUsersRequest"
+      })
+      const { data } = await axios.get("/api/users");
+      dispatch({
+        type:"allUsersSuccess",
+        payload:data.users
+      })
+      
+    } catch (error) {
+      dispatch({
+        type:"allUsersFailure",
+        payload: error.response.data.message,
+
+      })
+    }
+  }

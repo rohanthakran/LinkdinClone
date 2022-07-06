@@ -72,3 +72,20 @@ export const postOfFollwoingReducer = createReducer(initialState,{
         state.error = null
     }
 })
+export const allUserReducer = createReducer(initialState,{
+   allUsersRequest : (state,action) =>{
+        state.loading =true
+    },
+   allUsersSuccess : (state,action) =>{
+        state.loading =false
+        state.users = action.payload
+
+    }, 
+   allUsersFailure : (state,action) =>{
+        state.loading =false
+        state.users = action.payload
+    },
+    clearError : (state ) =>{
+        state.error = null
+    }
+})
