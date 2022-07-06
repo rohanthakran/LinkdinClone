@@ -1,5 +1,5 @@
 import { Avatar, Button, Typography } from '@mui/material'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {NavLink} from "react-router-dom"
 import {useDispatch, useSelector } from "react-redux";
 
@@ -25,15 +25,15 @@ const Post = ({
     isAccount = false,
 }) => {
   const dispatch = useDispatch()
-  const {users,loading:usersLoading} = useSelector(state=>state.allUsers)
+  const {error,message} = useSelector(state=>state.likePost)
 
     const [liked,setLiked] = useState(false)
     const handleLiked = () =>{
         setLiked(!liked)
         dispatch(likeDislikePost(postId))
     }
-    console.log("Post id", postId)
-  return (
+   
+    return (
     <div className='post'>
         <div className="postHeader">
             {isAccount ?(

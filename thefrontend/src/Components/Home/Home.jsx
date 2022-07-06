@@ -6,16 +6,30 @@ import Post from '../Post/Post'
 import { followingPost,allUsers } from '../../Actions/User';
 import Loader from '../Loader/Loader';
 import { Typography } from '@mui/material';
+import { useAlert } from 'react-alert';
+
 const Home = () => {
     const dispatch = useDispatch()
     const {loading,posts,error} = useSelector(state=>state.postOfFollowing)
     const {users,loading:usersLoading} = useSelector(state=>state.allUsers)
+    const {error:likeError,message} = useSelector(state=>state.likePost)
+    const alert = useAlert();
 
     useEffect(() =>{
         dispatch(followingPost())
         dispatch(allUsers())
     },[dispatch])
-    console.log("Tghe user", users)
+
+    useEffect(() => {
+      if(likeError){
+        alert.error(likeError)
+        dispatch({type:"clearErrors"})
+      }
+      if(message){
+        alert.success(message)
+        dispatch({type:"clearMessage"})
+      }
+     }, [alert,likeError,message]) 
   return (
      loading === true || usersLoading === true? <Loader/> :(
         <div className='home'>
